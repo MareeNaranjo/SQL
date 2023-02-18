@@ -1,0 +1,47 @@
+--Create an electronic store database
+
+CREATE TABLE Store (ID INTEGER PRIMARY KEY, Item TEXT, Aisle INTEGER, Category TEXT, Quantity INTEGER);
+
+INSERT INTO Store 
+VALUES 
+(1, 'Eraser', 1, 'Writing utensils', 100),
+(2, 'Eyeglass cleaner', 2, 'Accessories', 20),
+(3, 'Dry erase marker', 1,  'Writing utensils', 20),
+(4, 'Printer paper', 3, 'Printer accessories', 35),
+(5, 'Gift bag', 2,  'Accessories', 15),
+(6, 'Keyboard', 4, 'Computer accessories', 15),
+(7, 'Black pen', 1,  'Writing utensils', 100),
+(8, 'Printer cable', 3,  'Printer accessories', 20),
+(9, 'Pencil sharpener', 1,  'Writing utensils', 15),
+(10, 'Mouse', 4,  'Computer accessories', 20),
+(11, 'Blank CD', 2,  'Accessories', 25),
+(12, 'Blue pen', 1,  'Writing utensils', 100) ,
+(13, 'Desktop monitor', 4,  'Computer accessories', 12),
+(14, 'Power cable', 4,  'Computer accessories', 20),
+(15, 'Mousepad', 4,  'Computer accessories', 30);
+
+
+--Display the database ordered by Aisle
+SELECT * FROM Store
+ORDER BY Aisle;
+
+
+--Display the sum of all items in store
+SELECT SUM(Quantity) AS 'Total Quantity'
+FROM Store;
+
+
+--Display the Total number of items in each category
+SELECT SUM(Quantity) as "Total Number of Items", Category
+FROM Store
+GROUP BY Category;
+
+
+--Display the items that have a quantity of less than 20
+SELECT Item, Category, Quantity
+FROM Store
+WHERE Quantity <20
+ORDER BY Quantity;
+
+
+
