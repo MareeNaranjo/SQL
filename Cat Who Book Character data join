@@ -1,0 +1,54 @@
+/* Create table about the people and what they do here */
+CREATE TABLE Characters (ID INTEGER PRIMARY KEY, Name TEXT, Book_Introduced INTEGER);
+
+INSERT INTO Characters
+    VALUES
+    (1, 'Cobb, CC', 3),
+    (2, 'Glanz, Andrew', 3),
+    (3, 'Goodwinters, Penelope', 5),
+    (4, 'Hibber, Joseph', 1),
+    (5, 'Mountclement, George', 1),
+    (6, 'Lyke, David', 2),
+    (7, 'Fitch, Nigel', 6), 
+    (8, 'Goodwinters, Amanda', 6),
+    (9, 'Buchwalter, Franz', 1),
+    (10, 'Hanstable, Mildred', 5);
+
+CREATE TABLE Books (ID INTEGER PRIMARY KEY, Book_Name TEXT, Number_In_Series TEXT);
+
+INSERT INTO Books
+    VALUES
+    (1, 'The cat who could read backwards', 1),
+    (2, 'The cat who ate danish modern', 2),
+    (3,'The cat who turned on and off', 3),
+    (4,'The cat who saw red', 4),
+    (5,'The cat who played brahms', 5),
+    (6,'The cat who played post office', 6);
+
+
+CREATE TABLE Character_Deaths (ID INTEGER PRIMARY KEY, Character TEXT, Book INTEGER);
+
+INSERT INTO Character_Deaths
+    VALUES
+    (1, 'Cobb, CC', 3),
+    (2, 'Glanz, Andrew', 3),
+    (3, 'Goodwinters, Penelope', 6),
+    (4, 'Hibber, Joseph', 1),
+    (5, 'Mountclement, George', 1),
+    (6, 'Lyke, David', 2);
+    
+/*Organize characters in order of introduction*/
+SELECT c.Name, b.book_name
+FROM characters c
+JOIN books b
+    ON c.Book_introduced=b.number_in_series
+ORDER BY b.number_in_series;
+
+/*Combine characters, book names and character death*/
+SELECT c.name as Character_Name, b.book_name as Book_Introduced, d.book as Book_Death_Occurred
+FROM Characters c
+LEFT JOIN Character_Deaths d
+ON d.character=c.name
+Join Books b
+ON c.Book_introduced=b.number_in_series;
+
