@@ -62,3 +62,16 @@ LIMIT 1
 SELECT avg(danceability)as 'AVG Danceability of top 12'
 FROM spotifydata
 WHERE (SELECT popularity FROM spotifydata ORDER BY popularity desc limit 12)
+
+--Calculate the average popularity for the artists in the Spotify data table. 
+
+SELECT avg(popularity) as 'Average popularity'
+FROM spotifydata
+
+--Then, for every artist with an average popularity of 90 or above, show their name, their average popularity, and label them as a “Top Star”.
+WITH average_popularity AS (SELECT artist_name, avg(popularity) 
+FROM spotifydata
+GROUP BY artist_name
+HAVING avg(popularity)>=90)
+
+SELECT artist_name AS 'Top Star' from average_popularity
