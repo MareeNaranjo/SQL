@@ -1,0 +1,129 @@
+--Using the Chinook database, I thought of questions that may be helpful to a company and queried the databases for results to each question.
+
+--Which media types bring in the most revenue?
+SELECT m.Name, round(sum(i.total),2) AS 'Total Revenue'
+FROM media_types m
+LEFT JOIN tracks t
+ON m.mediatypeID=t.MediaTypeId
+LEFT JOIN invoice_items
+ON t.trackid=invoice_items.trackid
+LEFT JOIN invoices i
+ON i.invoiceid=invoice_items.InvoiceLineId
+GROUP BY m.mediatypeid;
+
+--What were the two highest selling genres?
+SELECT g.name, round(sum(i.total), 2) AS 'Total Revenue'
+FROM genres g
+LEFT JOIN tracks t
+ON g.genreid=t.genreid
+LEFT JOIN invoice_items
+ON t.trackid=invoice_items.trackid
+LEFT JOIN invoices i
+ON i.invoiceid=invoice_items.InvoiceLineId
+GROUP BY g.Name
+ORDER BY sum(i.total) desc
+LIMIT 2;
+
+--What was the average invoice amount per customer?
+SELECT c.firstname, c.lastname, ROUND(avg(i.total),2) AS 'Average Invoice Amount'
+FROM customers c
+LEFT JOIN invoices i
+ON c.customerID=i.invoiceid
+GROUP BY c.customerid
+ORDER BY c.lastname asc;
+
+--Which country had the highest average invoice amount?
+SELECT c.country, round(avg(i.total),2) AS 'Average Invoice Amount'
+FROM customers c
+LEFT JOIN invoices i
+ON c.customerid=i.customerid
+ORDER BY round(avg(i.total),2) desc
+LIMIT 1;
+
+--What was the total revenue in 2012?
+SELECT sum(total) AS 'Total Revenue'
+FROM invoices
+WHERE InvoiceDate LIKE '2012%';
+
+--Which country has the most customers?
+SELECT Country, count(*) AS 'Number of customers'
+FROM customers
+GROUP BY country
+ORDER BY count(*) desc
+LIMIT 1;
+
+--Which country has the least customers?
+SELECT Country, count(*) AS 'Number of customers'
+FROM customers
+GROUP BY country
+ORDER BY count(*) asc;
+
+--Which 10 artists have created the most albums?
+SELECT a.name, count(albums.albumid) AS 'Number of Albums'
+FROM artists a
+LEFT JOIN albums
+ON a.artistID=albums.ArtistId
+GROUP BY a.artistid
+ORDER BY count(albums.albumid) desc
+LIMIT 10;
+
+--Which 5 artists have created the most tracks?
+SELECT a.name, count(t.TrackId) AS 'Number of Tracks'
+FROM artists a
+LEFT JOIN albums
+ON a.artistid=albums.artistid
+LEFT JOIN tracks t
+ON albums.albumid=t.albumid
+GROUP BY a.artistid
+ORDER BY count(t.TrackID) desc
+LIMIT 5;
+
+--Which artist has created the longest track?
+SELECT art.name, t.name AS 'Track Name', t.milliseconds AS 'Length of Track'
+FROM artists art
+LEFT JOIN albums alb
+ON art.artistid=alb.artistid
+LEFT JOIN tracks t
+ON alb.albumid=t.albumid
+ORDER BY t.milliseconds desc
+LIMIT 1;
+
+--Which artist has created the shortest track?
+SELECT art.name, t.name AS 'Track Name', t.milliseconds AS 'Length of Track'
+FROM artists art
+LEFT JOIN albums alb
+ON art.artistid=alb.artistid
+LEFT JOIN tracks t
+ON alb.albumid=t.albumid
+WHERE t.milliseconds IS NOT NULL
+ORDER BY t.milliseconds asc
+LIMIT 1;
+
+--How much revenue has the longest track brought in?
+SELECT t.name, sum(i.unitprice*i.quantity) AS 'Total revenue'
+FROM tracks t
+LEFT JOIN invoice_items i
+ON t.trackid=i.trackid
+GROUP BY t.trackid
+ORDER BY t.milliseconds desc
+LIMIT 1;
+select * from invoices
+
+--What is the most purchased track?
+SELECT t.name, sum(i.quantity)
+FROM tracks t
+LEFT JOIN invoice_items i
+ON t.trackid=i.trackid
+GROUP BY t.trackid
+ORDER BY sum(i.quantity) desc
+LIMIT 1;
+
+--Ranking the employees by sale totals:
+SELECT e.Lastname, e.firstname, e.employeeid, round(sum(i.total),2) AS 'Revenue Generated'
+FROM employees e
+JOIN customers c
+ON e.employeeid=c.supportrepid
+JOIN invoices i
+ON c.customerid=i.customerid
+GROUP BY e.employeeid
+ORDER BY sum(i.total) desc;
