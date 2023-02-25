@@ -1,0 +1,64 @@
+/*Using the IMDB movie database from https://www.kaggle.com/datasets/luizpaulodeoliveira/imdb-project-sql, connecting the database and querying the information for interesting results*/
+
+--How many James Cameron movies are listed on IMDB? 
+SELECT count(*) AS 'Movies directed by James Cameron' FROM movies m
+JOIN directors d
+ON m.director_id = d.id
+WHERE d.name='James Cameron';
+
+--List the directors who worked on each Spider-Man movie
+SELECT m.original_title AS 'Movie Title', d.name 
+FROM movies m
+JOIN directors d
+ON m.director_id=d.id
+WHERE m.original_title LIKE '%Spider-Man%';
+
+--Who is the director with the most movies?
+SELECT count(*) as 'Number of Movies', d.name
+FROM movies m
+JOIN directors d
+ON m.director_id=d.id
+GROUP BY d.name
+ORDER BY count(*) desc
+LIMIT 1;
+
+--What movie had the earliest release date?
+SELECT original_title, release_date
+FROM movies
+ORDER BY release_date asc
+LIMIT 1;
+
+--What are the highest 10 rated movie released in 2008?
+SELECT title, vote_average
+FROM movies
+ORDER BY vote_average desc
+LIMIT 10;
+
+--What was the revenue in 2015?
+SELECT sum(revenue) as 'Total Revenue'
+FROM movies
+WHERE release_date LIKE '2015%';
+
+--What are the 5 most profitable movies? (revenue minus budget)
+SELECT title, (revenue - budget) AS Profit
+FROM movies
+ORDER BY (revenue-budget) desc
+LIMIT 5;
+
+--What is the highest rated movie?
+SELECT title, max(popularity)
+FROM movies;
+
+--Who are the top 5 directors with highest rated movies?
+SELECT d.name
+FROM movies m
+JOIN directors d
+ON d.id=m.director_id
+ORDER BY m.vote_average desc
+LIMIT 5;
+
+--What is the least profitable movie?
+SELECT title, (revenue - budget) AS Profit
+FROM movies
+ORDER BY (revenue-budget) asc
+LIMIT 1;
